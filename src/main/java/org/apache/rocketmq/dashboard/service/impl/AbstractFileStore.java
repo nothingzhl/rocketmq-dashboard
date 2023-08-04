@@ -20,9 +20,12 @@ import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import org.apache.rocketmq.dashboard.config.RMQConfigure;
+import org.apache.rocketmq.dashboard.model.User;
 import org.apache.rocketmq.srvutil.FileWatchService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import javax.validation.constraints.NotNull;
 
 public abstract class AbstractFileStore {
     public final Logger log = LoggerFactory.getLogger(this.getClass());
@@ -79,5 +82,17 @@ public abstract class AbstractFileStore {
             log.error("Failed to start FileWatcherService", e);
         }
         return false;
+    }
+
+    public User queryByName(String name) {
+        return UserServiceImpl.FileBasedUserInfoStore.userMap.get(name);
+    }
+
+    public User queryByUsernameAndPassword(@NotNull String username, @NotNull String password) {
+        User user = queryByName(username);
+        if (user != null && password.equals(user.getPassword())) {
+            return user.cloneOne();
+        }
+        return null;
     }
 }

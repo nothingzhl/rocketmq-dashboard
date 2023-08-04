@@ -17,11 +17,14 @@
 package org.apache.rocketmq.dashboard.model;
 
 import org.hibernate.validator.constraints.Range;
+import org.springframework.data.annotation.Id;
+
 
 public class User {
     public static final int ORDINARY = 0;
     public static final int ADMIN = 1;
 
+    @Id
     private long id;
     private String name;
     private String password;
